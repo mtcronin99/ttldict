@@ -47,35 +47,37 @@ class TTLDict(MutableMapping):
             return expire - now
 
     def expire_at(self, key, timestamp):
-        """ Set the key expire timestamp """
+        """Set the key expire timestamp"""
         with self._lock:
             _expire, value = self._values[key]
             self._values[key] = (timestamp, value)
 
-    def is_expired(self, key, now=None, remove=False):
-        """ Check if key has expired """
+    def is_expired(self, key, now=None):
+        """ Check if key has expired, and return it if so"""
         with self._lock:
             if now is None:
                 now = time.time()
+
             expire, _value = self._values[key]
-            if expire is None:
-                return False
-            expired = expire < now
-            if expired and remove:
-                self.__delitem__(key)
-            return expired
+
+            if expire:
+                if expire < now:
+                    return key
+
+    def _purge(self):
+        _remove = [key for key in self._values.keys() if self.is_expired(key)]  # noqa
+        [self._values.pop(key) for key in _remove]
 
     def __len__(self):
         with self._lock:
-            for key in self._values.keys():
-                self.is_expired(key, remove=True)
+            self._purge()
             return len(self._values)
 
     def __iter__(self):
         with self._lock:
+            self._purge()
             for key in self._values.keys():
-                if not self.is_expired(key, remove=True):
-                    yield key
+                yield key
 
     def __setitem__(self, key, value):
         with self._lock:
