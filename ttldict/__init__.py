@@ -26,10 +26,12 @@ class TTLDict(MutableMapping):
         self.update(*args, **kwargs)
 
     def __repr__(self):
-        return '<TTLDict@%#08x; ttl=%r, v=%r;>' % (id(self), self._default_ttl, self._values)
+        self._purge()
+        return '<TTLDict@%#08x; ttl=%r, v=%r;>' % (
+            id(self), self._default_ttl, self._values)
 
     def set_ttl(self, key, ttl, now=None):
-        """ Set TTL for the given key """
+        """Set TTL for the given key"""
         if now is None:
             now = time.time()
         with self._lock:
@@ -37,7 +39,7 @@ class TTLDict(MutableMapping):
             self._values[key] = (now + ttl, value)
 
     def get_ttl(self, key, now=None):
-        """ Return remaining TTL for a key """
+        """Return remaining TTL for a key"""
         if now is None:
             now = time.time()
         with self._lock:
@@ -89,5 +91,7 @@ class TTLDict(MutableMapping):
 
     def __getitem__(self, key):
         with self._lock:
-            self.is_expired(key, remove=True)
-            return self._values[key][1]
+            if self.is_expired(key):
+                self.__delitem__(key)
+            else:
+                return self._values[key][1]
