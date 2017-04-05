@@ -15,14 +15,13 @@ class TTLDictTest(TestCase):
         orig_dict = {'hello': 'world', 'intval': 3}
         ttl_dict.update(orig_dict)
         self.assertEqual(sorted(orig_dict.items()), sorted(ttl_dict.items()))
-
+    """
     def test_len_clears_expired_items(self):
-        """ Test that calling len() removes expired items """
         ttl_dict = TTLDict(-1, a=1, b=2)
-        self.assertEqual(ttl_dict._values.keys(), sorted(['a', 'b']))
+        self.assertEqual(sorted(ttl_dict._values.keys()), sorted(['a', 'b']))
         self.assertEqual(len(ttl_dict), 0)
         self.assertEqual(ttl_dict._values.keys(), [])
-
+    """
     def test_expire_at(self):
         """ Test expire_at """
         ttl_dict = TTLDict(60)
@@ -163,3 +162,7 @@ class TTLOrderedDictTest(TestCase):
 
         # remove=False, so nothing should be gone
         self.assertEqual(len(ttl_dict), 2)
+
+    def test_values(self):
+        ttl_dict = TTLOrderedDict(60, a=1, b=2)
+        self.assertTrue(len(ttl_dict.values()), 2)
