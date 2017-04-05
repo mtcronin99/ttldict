@@ -5,7 +5,7 @@ with open("README.md") as f:
 
 
 setup(name='ttldict',
-      version='0.2.1',
+      version='0.2.2',
       description="Dictionary with auto-expiring values for caching purposes",
       long_description=long_description,
       author='Oz Tiram',
