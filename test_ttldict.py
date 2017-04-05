@@ -89,3 +89,13 @@ class TTLOrderedDictTest(TestCase):
     def test_values(self):
         ttl_dict = TTLOrderedDict(60, a=1, b=2)
         self.assertTrue(len(ttl_dict.values()), 2)
+
+    def test_len(self):
+        """ Test len() gives real length """
+        ttl_dict = TTLOrderedDict(1)
+        self.assertEqual(len(ttl_dict), 0)
+        ttl_dict['a'] = 1
+        ttl_dict['b'] = 2
+        self.assertEqual(len(ttl_dict), 2)
+        time.sleep(2)
+        self.assertEqual(len(ttl_dict), 0)
