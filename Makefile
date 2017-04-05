@@ -25,8 +25,7 @@ coverage: ## check code coverage quickly with the default Python
 	py.test -x -vv --cov --cov-report html --cov-config .coveragerc
 
 
-release:
-	release: clean
+release: clean
 	python setup.py sdist
 	twine upload --skip-existing dist/*
 
