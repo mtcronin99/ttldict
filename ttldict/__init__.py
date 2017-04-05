@@ -62,9 +62,8 @@ class TTLOrderedDict(OrderedDict):
         [self.__delitem__(key) for key in _remove]
 
     def __iter__(self):
-        """make a snapshot iterator of keys.
-        If you use this iterator it does not purge keys while you
-        iterate.
+        """
+        Yield only non expired keys, without purging the expired ones
         """
         with self._lock:
             for key in super().__iter__():
@@ -83,7 +82,7 @@ class TTLOrderedDict(OrderedDict):
         with self._lock:
             super().__delitem__(key)
 
-    def __getitem__(self, key, default=None):
+    def __getitem__(self, key):
         with self._lock:
             if self.is_expired(key):
                 self.__delitem__(key)
