@@ -1,0 +1,3 @@
+[run]
+source =
+   ttldict/__init__.py
