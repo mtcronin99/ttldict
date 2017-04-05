@@ -61,6 +61,10 @@ class TTLOrderedDict(OrderedDict):
         _remove = [key for key in _keys if self.is_expired(key)]  # noqa
         [self.__delitem__(key) for key in _remove]
 
+    def __len__(self):
+        self._purge()
+        return super().__len__()
+
     def __iter__(self):
         """
         Yield only non expired keys, without purging the expired ones
