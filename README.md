@@ -3,9 +3,10 @@ TTLDict
 
 Python dictionary with key expiry time
 
-`OrderedTTLDict` - behaves like an ordered dict you know, for 3 methods
-
-items, keys, and values return a list of objects after purging expired objects.
+`OrderedTTLDict` - behaves like an ordered dict you know.
+The methods `items` and `values` return a list of objects after purging expired
+objects. The method `keys` returns `odict_keys` as the parnet class, but it does
+so after purging expired keys.
 Python's own OrderedDict and other dictionaries return a [dictionary views][1]
 whereas the methods here do not.
 
