@@ -3,7 +3,7 @@ from threading import RLock
 import time
 
 __all__ = ['TTLOrderedDict']
-__version__ = '0.2.1'
+__version__ = '0.2.3'
 
 
 class TTLOrderedDict(OrderedDict):
