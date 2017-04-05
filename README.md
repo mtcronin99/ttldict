@@ -10,6 +10,14 @@ so after purging expired keys.
 Python's own OrderedDict and other dictionaries return a [dictionary views][1]
 whereas the methods here do not.
 
+Testing
+-------
+
+Use pytest to run the tests:
+
+```
+make test
+```
 
 Credits and Thanks:
 -------------------
