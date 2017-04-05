@@ -22,6 +22,11 @@ class TTLOrderedDict(OrderedDict):
         return '<TTLDict@%#08x; ttl=%r, v=%r;>' % (
             id(self), self._default_ttl, super().__repr__())
 
+    def __len__(self):
+        with self._lock:
+            self._purge()
+            return super().__len__()
+
     def set_ttl(self, key, ttl, now=None):
         """Set TTL for the given key"""
         if now is None:
