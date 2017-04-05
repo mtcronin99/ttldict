@@ -19,7 +19,7 @@ class TTLOrderedDict(OrderedDict):
 
     def __repr__(self):
         self._purge()
-        return '<TTLDict@%#08x; ttl=%r, v=%r;>' % (
+        return '<TTLOrederedDict@%#08x; ttl=%r, v=%r;>' % (
             id(self), self._default_ttl, super().__repr__())
 
     def __len__(self):
@@ -65,10 +65,6 @@ class TTLOrderedDict(OrderedDict):
         _keys = list(super().__iter__())
         _remove = [key for key in _keys if self.is_expired(key)]  # noqa
         [self.__delitem__(key) for key in _remove]
-
-    def __len__(self):
-        self._purge()
-        return super().__len__()
 
     def __iter__(self):
         """
