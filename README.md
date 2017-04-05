@@ -1,12 +1,14 @@
 TTLDict
 =======
 
-Python dictionaries with key expiry time
+Python dictionary with key expiry time
 
- - TTLDict - allows you to create a dict with ttl. Has a tricky API.
- - OrderedTTLDict - behaves more sanely. Use this!
+`OrderedTTLDict` - behaves like an ordered dict you know, for 3 methods
 
- TTLDict will be soon deprecated, and is here only for reference.
+items, keys, and values return a list of objects after purging expired objects.
+Python's own OrderedDict and other dictionaries return a [dictionary views][1]
+whereas the methods here do not.
+
 
 Credits and Thanks:
 -------------------
@@ -23,3 +25,5 @@ This library contains fixes for his TTLDict class
 and my own OrderedTTLDict.
 
 Without all those this work would not have been possible.
+
+[1]: https://docs.python.org/3/library/stdtypes.html#dictionary-view-objects
