@@ -99,6 +99,7 @@ class TTLOrderedDict(OrderedDict):
         self.update(*args, **kwargs)
 
     def __repr__(self):
+        self._purge()
         return '<TTLDict@%#08x; ttl=%r, v=%r;>' % (
             id(self), self._default_ttl, super().__repr__())
 
@@ -169,3 +170,18 @@ class TTLOrderedDict(OrderedDict):
                 self.__delitem__(key)
             else:
                 return super().__getitem__(key)[1]
+
+    def keys(self):
+        with self._lock:
+            self._purge()
+            return super().keys()
+
+    def items(self):
+        with self._lock:
+            self._purge()
+            return [(k, v[1]) for (k, v) in super().items()]
+
+    def values(self):
+        with self._lock:
+            self._purge()
+            return [v for (t, v) in list(super().values())]
