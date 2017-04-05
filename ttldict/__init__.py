@@ -86,8 +86,9 @@ class TTLOrderedDict(OrderedDict):
         with self._lock:
             if self.is_expired(key):
                 self.__delitem__(key)
-            else:
-                return super().__getitem__(key)[1]
+                raise KeyError
+
+            return super().__getitem__(key)[1]
 
     def keys(self):
         with self._lock:
@@ -103,3 +104,9 @@ class TTLOrderedDict(OrderedDict):
         with self._lock:
             self._purge()
             return [v for (t, v) in list(super().values())]
+
+    def get(self, key, default=None):
+        try:
+            self[key]
+        except KeyError:
+            return default
