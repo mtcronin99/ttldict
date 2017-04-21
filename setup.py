@@ -5,7 +5,7 @@ with open("README.md") as f:
 
 
 setup(name='ttldict',
-      version='0.2.3',
+      version='0.2.4',
       description="Dictionary with auto-expiring values for caching purposes",
       long_description=long_description,
       author='Oz Tiram',
@@ -19,6 +19,7 @@ setup(name='ttldict',
                    'License :: OSI Approved :: MIT License',
                    'Programming Language :: Python :: 3',
                    'Programming Language :: Python :: 3.4',
-                   'Programming Language :: Python :: 3.5'],
+                   'Programming Language :: Python :: 3.5',
+                   'Programming Language :: Python :: 3.6'],
       zip_safe=True,
       extras_require={'test': ['pytest', 'coverage']})
