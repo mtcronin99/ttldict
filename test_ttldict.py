@@ -2,6 +2,7 @@
 Unit tests for TTLDict
 """
 
+from collections import OrderedDict
 from unittest import TestCase
 from ttldict import TTLOrderedDict
 import time
@@ -11,8 +12,9 @@ class TTLOrderedDictTest(TestCase):
     """ TTLOrderedDict tests """
     def test_update_no_ttl(self):
         """ Test update() call """
-        ttl_dict = TTLOrderedDict(None)
-        orig_dict = {'hello': 'world', 'intval': 3}
+        ttl_dict = TTLOrderedDict(3)
+        # order is not preserved for dicts before Python 3.6
+        orig_dict = OrderedDict([('hello', 'world'), ('intval', 3)])
         ttl_dict.update(orig_dict)
         self.assertEqual(sorted(orig_dict.items()), sorted(ttl_dict.items()))
 
@@ -87,8 +89,11 @@ class TTLOrderedDictTest(TestCase):
         self.assertEqual(len(ttl_dict), 2)
 
     def test_values(self):
-        ttl_dict = TTLOrderedDict(60, a=1, b=2)
+        ttl_dict = TTLOrderedDict(60)
+        orig_dict = OrderedDict([('a', 1), ('b', 2)])
+        ttl_dict.update(orig_dict)
         self.assertTrue(len(ttl_dict.values()), 2)
+        self.assertEqual([1, 2], ttl_dict.values())
 
     def test_len(self):
         """ Test len() gives real length """

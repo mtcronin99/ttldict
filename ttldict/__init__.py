@@ -3,7 +3,6 @@ from threading import RLock
 import time
 
 __all__ = ['TTLOrderedDict']
-__version__ = '0.2.3'
 
 
 class TTLOrderedDict(OrderedDict):
@@ -12,6 +11,11 @@ class TTLOrderedDict(OrderedDict):
     Extra args and kwargs are passed to initial .update() call
     """
     def __init__(self, default_ttl, *args, **kwargs):
+        """
+        Be warned, if you use this with Python versions earlier than 3.6
+        when passing **kwargs order is not preseverd.
+        """
+        assert isinstance(default_ttl, int)
         self._default_ttl = default_ttl
         self._lock = RLock()
         super().__init__()
@@ -102,12 +106,12 @@ class TTLOrderedDict(OrderedDict):
     def items(self):
         with self._lock:
             self._purge()
-            return [(k, v) for (k, v) in super().items()]
+            return [(k, v[1]) for (k, v) in super().items()]
 
     def values(self):
         with self._lock:
             self._purge()
-            return [v for v in super().values()]
+            return [v[1] for v in super().values()]
 
     def get(self, key, default=None):
         try:
