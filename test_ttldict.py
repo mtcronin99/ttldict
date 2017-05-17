@@ -16,7 +16,9 @@ class TTLOrderedDictTest(TestCase):
         # order is not preserved for dicts before Python 3.6
         orig_dict = OrderedDict([('hello', 'world'), ('intval', 3)])
         ttl_dict.update(orig_dict)
-        self.assertEqual(sorted(orig_dict.items()), sorted(ttl_dict.items()))
+        items = ttl_dict.items()
+        for item in orig_dict.items():
+            self.assertIn(item, items)
 
     def test_purge_clears_expired_items(self):
         """ Test that calling _purge() removes expired items """
@@ -93,7 +95,7 @@ class TTLOrderedDictTest(TestCase):
         orig_dict = OrderedDict([('a', 1), ('b', 2)])
         ttl_dict.update(orig_dict)
         self.assertTrue(len(ttl_dict.values()), 2)
-        self.assertEqual([1, 2], ttl_dict.values())
+        self.assertEqual([1, 2], sorted(ttl_dict.values()))
 
     def test_len(self):
         """ Test len() gives real length """
