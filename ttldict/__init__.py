@@ -22,7 +22,7 @@ class TTLOrderedDict(OrderedDict):
         self.update(*args, **kwargs)
 
     def __repr__(self):
-        return '<TTLOrederedDict@%#08x; ttl=%r, OrderedDict=%r;>' % (
+        return '<TTLOrderedDict@%#08x; ttl=%r, OrderedDict=%r;>' % (
             id(self), self._default_ttl, self.items())
 
     def __len__(self):
