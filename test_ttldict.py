@@ -106,3 +106,13 @@ class TTLOrderedDictTest(TestCase):
         self.assertEqual(len(ttl_dict), 2)
         time.sleep(2)
         self.assertEqual(len(ttl_dict), 0)
+
+    def test_get(self):
+        """ Test get() returns value if exists or default if not"""
+        ttl_dict = TTLOrderedDict(1)
+        ttl_dict['a'] = 1
+        self.assertEqual(ttl_dict.get('a'), 1)
+        self.assertEqual(ttl_dict.get('b', "default"), "default")
+        time.sleep(2)
+        self.assertEqual(ttl_dict.get('a', "default"), "default")
+

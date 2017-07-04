@@ -117,6 +117,6 @@ class TTLOrderedDict(OrderedDict):
 
     def get(self, key, default=None):
         try:
-            self[key]
+            return self[key]
         except KeyError:
             return default
