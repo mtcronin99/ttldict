@@ -5,13 +5,13 @@ Python dictionary with key expiry time
 
 `OrderedTTLDict` - behaves like an ordered dict you know.
 The methods `items` and `values` return a list of objects after purging expired
-objects. The method `keys` returns `odict_keys` as the parnet class, but it does
+objects. The method `keys` returns `odict_keys` as the parent class, but it does
 so after purging expired keys.
 Python's own OrderedDict and other dictionaries return a [dictionary views][1]
 whereas the methods here do not.
 
 Expired keys are not removed, instead they are expired. You can remove expired
-keys by calling `keys()` or any other method that iterats over the dictionary
+keys by calling `keys()` or any other method that iterates over the dictionary
 instance. Expired keys will be removed when you try to access them.
 
 Demo:
