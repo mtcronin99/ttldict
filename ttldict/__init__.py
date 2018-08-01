@@ -1,3 +1,10 @@
+from __future__ import unicode_literals
+from __future__ import print_function
+from __future__ import division
+from __future__ import absolute_import
+from builtins import super
+from future import standard_library
+standard_library.install_aliases()
 from collections import OrderedDict
 from threading import RLock
 import time
@@ -18,7 +25,7 @@ class TTLOrderedDict(OrderedDict):
         assert isinstance(default_ttl, int)
         self._default_ttl = default_ttl
         self._lock = RLock()
-        super().__init__()
+        super(TTLOrderedDict, self).__init__()
         self.update(*args, **kwargs)
 
     def __repr__(self):
@@ -28,7 +35,7 @@ class TTLOrderedDict(OrderedDict):
     def __len__(self):
         with self._lock:
             self._purge()
-            return super().__len__()
+            return super(TTLOrderedDict, self).__len__()
 
     def set_ttl(self, key, ttl, now=None):
         """Set TTL for the given key"""
@@ -36,21 +43,21 @@ class TTLOrderedDict(OrderedDict):
             now = time.time()
         with self._lock:
             value = self[key]
-            super().__setitem__(key, (now + ttl, value))
+            super(TTLOrderedDict, self).__setitem__(key, (now + ttl, value))
 
     def get_ttl(self, key, now=None):
         """Return remaining TTL for a key"""
         if now is None:
             now = time.time()
         with self._lock:
-            expire, _value = super().__getitem__(key)
+            expire, _value = super(TTLOrderedDict, self).__getitem__(key)
             return expire - now
 
     def expire_at(self, key, timestamp):
         """Set the key expire timestamp"""
         with self._lock:
             value = self.__getitem__(key)
-            super().__setitem__(key,  (timestamp, value))
+            super(TTLOrderedDict, self).__setitem__(key,  (timestamp, value))
 
     def is_expired(self, key, now=None):
         """ Check if key has expired, and return it if so"""
@@ -58,14 +65,14 @@ class TTLOrderedDict(OrderedDict):
             if now is None:
                 now = time.time()
 
-            expire, _value = super().__getitem__(key)
+            expire, _value = super(TTLOrderedDict, self).__getitem__(key)
 
             if expire:
                 if expire < now:
                     return key
 
     def _purge(self):
-        _keys = list(super().__iter__())
+        _keys = list(super(TTLOrderedDict, self).__iter__())
         _remove = [key for key in _keys if self.is_expired(key)]  # noqa
         [self.__delitem__(key) for key in _remove]
 
@@ -74,7 +81,7 @@ class TTLOrderedDict(OrderedDict):
         Yield only non expired keys, without purging the expired ones
         """
         with self._lock:
-            for key in super().__iter__():
+            for key in super(TTLOrderedDict, self).__iter__():
                 if not self.is_expired(key):
                     yield key
 
@@ -84,24 +91,24 @@ class TTLOrderedDict(OrderedDict):
                 expire = None
             else:
                 expire = time.time() + self._default_ttl
-            super().__setitem__(key,  (expire, value))
+            super(TTLOrderedDict, self).__setitem__(key,  (expire, value))
 
     def __delitem__(self, key):
         with self._lock:
-            super().__delitem__(key)
+            super(TTLOrderedDict, self).__delitem__(key)
 
     def __getitem__(self, key):
         with self._lock:
             if self.is_expired(key):
                 self.__delitem__(key)
                 raise KeyError
-            item = super().__getitem__(key)[1]
+            item = super(TTLOrderedDict, self).__getitem__(key)[1]
             return item
 
     def keys(self):
         with self._lock:
             self._purge()
-            return super().keys()
+            return super(TTLOrderedDict, self).keys()
 
     def items(self):
         with self._lock:
